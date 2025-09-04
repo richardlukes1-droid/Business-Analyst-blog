@@ -1,134 +1,117 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FileSpreadsheet } from "lucide-react";
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>První projekt</title>
+    <style>
+      :root {
+        --bg: #0b0c10;
+        --card: #111318;
+        --muted: #9aa3b2;
+        --text: #e9eef6;
+        --accent: #4f9cf9;
+        --border: #1b1f27;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); line-height: 1.6; }
+      .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+      header { border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(79,156,249,.06), transparent); }
+      h1 { font-size: clamp(28px, 3vw, 40px); margin: 0; }
+      p.lead { color: var(--muted); max-width: 80ch; }
+      section { margin: 32px 0; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+      .section-title { font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+      .metadata { display: grid; grid-template-columns: 1fr; gap: 10px; padding-left: 18px; }
+      .metadata li { list-style: disc; }
+      .row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; align-items: baseline; }
+      .label { color: var(--text); font-weight: 600; text-transform: capitalize; }
+      .value { color: var(--muted); }
+      @media (min-width: 640px) { .metadata { grid-template-columns: 1fr 1fr; } }
+      .xls-preview { display: grid; gap: 12px; }
+      .placeholder { border: 1px dashed var(--border); background: rgba(255,255,255,.02); border-radius: 12px; padding: 16px; color: var(--muted); }
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+      .small { font-size: 12px; color: var(--muted); }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      footer { border-top: 1px solid var(--border); color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>První projekt</h1>
+        <p class="lead">
+          Jedná se o analýzu data pocházejících ze dvou hotelů. Data popisují zákazníky dvou hotelů. Kdo jsou tito zákazníci, proč se ubytovávají v daných hotelech, jak hodnotí svůj pobyt.
+        </p>
+      </div>
+    </header>
 
-/**
- * Jednoduchá projektová stránka dle zadání.
- * - Nadpis: "První projekt"
- * - Popis projektu (česky)
- * - Sekce "Metadata" s odrážkami ve dvou sloupcích: "popisek dat + data"
- * - Náhled uloženého XLS souboru (zástupný box, lze později napojit na skutečný soubor)
- */
-
-function MetadataList() {
-  const items: { label: string; value: string }[] = [
-    { label: "Typ dat", value: "neveřejná" },
-    { label: "období", value: "01.01.20210 až 01.06.20210" },
-    { label: "počet záznamů", value: "15 000" },
-  ];
-
-  return (
-    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 list-disc pl-5">
-      {items.map((it) => (
-        <li key={it.label} className="marker:text-muted-foreground">
-          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-            <span className="font-medium capitalize text-foreground">{it.label}</span>
-            <span className="text-muted-foreground">— {it.value}</span>
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function XlsPreview({ url }: { url?: string }) {
-  // Pokud později dodáš URL/Blob XLS, vlož ji do prop "url" a iframe se zobrazí.
-  const hasUrl = Boolean(url);
-  return (
-    <Card className="rounded-2xl overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <FileSpreadsheet className="h-5 w-5" /> Náhled XLS souboru
-        </CardTitle>
-      </CardHeader>
-      <Separator />
-      <CardContent className="p-0">
-        {hasUrl ? (
-          <iframe
-            src={url}
-            title="XLS Preview"
-            className="w-full h-[60vh]"
-          />
-        ) : (
-          <div className="p-6 text-sm text-muted-foreground">
-            Zatím není připojen konkrétní soubor. Můžeš ho nahrát a uvést jeho URL,
-            případně sem přidáme serverovou konverzi XLS → HTML náhled.
-            <div className="mt-4 flex items-center gap-2">
-              <Input placeholder="Vlož URL k XLS (volitelné)" />
-              <Button disabled>Načíst</Button>
-            </div>
-            <div className="mt-4 rounded-lg border bg-muted/30 p-4">
-              <p className="mb-2">Ukázkový layout náhledu (zástupný obsah):</p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="py-1 pr-4">Hotel</th>
-                      <th className="py-1 pr-4">Datum</th>
-                      <th className="py-1 pr-4">Hodnocení</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-1 pr-4">Hotel A</td>
-                      <td className="py-1 pr-4">20210-02-15</td>
-                      <td className="py-1 pr-4">8/10</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-1 pr-4">Hotel B</td>
-                      <td className="py-1 pr-4">20210-03-01</td>
-                      <td className="py-1 pr-4">9/10</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-export default function ProjektPage() {
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b">
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">První projekt</h1>
-          <p className="mt-3 text-muted-foreground max-w-3xl leading-relaxed">
-            Jedná se o analýzu data pocházejících ze dvou hotelů. Data popisují zákazníky dvou
-            hotelů. Kdo jsou tito zákazníci, proč se ubytovávají v daných hotelech, jak hodnotí
-            svůj pobyt.
-          </p>
+    <main class="container">
+      <section>
+        <div class="card">
+          <h2 class="section-title">Metadata</h2>
+          <ul class="metadata">
+            <li>
+              <div class="row"><span class="label">Typ dat</span><span class="value">neveřejná</span></div>
+            </li>
+            <li>
+              <div class="row"><span class="label">období</span><span class="value">01.01.20210 až 01.06.20210</span></div>
+            </li>
+            <li>
+              <div class="row"><span class="label">počet záznamů</span><span class="value">15&nbsp;000</span></div>
+            </li>
+          </ul>
+          <p class="small">(Pozn.: rok „20210“ vypadá jako překlep. Pokud má být rok 2021, rád upravím.)</p>
         </div>
-      </header>
+      </section>
 
-      <main className="max-w-5xl mx-auto px-4 py-8 space-y-10">
-        <section>
-          <h2 className="text-xl font-semibold mb-3">Metadata</h2>
-          <MetadataList />
-        </section>
+      <section>
+        <div class="card xls-preview">
+          <h2 class="section-title">Náhled uloženého XLS souboru</h2>
+          <div class="placeholder">
+            Zatím není připojena URL ke konkrétnímu XLS souboru. Na GitHub Pages nelze XLS vykreslit přímo – doporučené možnosti:
+            <ol>
+              <li>Vlož odkaz na soubor v repozitáři (např. <code>/data/hotely.xlsx</code>).</li>
+              <li>Pro vložení do stránky použij <em>Office Web Viewer</em>:
+                <div class="small">iframe src="https://view.officeapps.live.com/op/embed.aspx?src=PLNA_URL_K_SOUBORU"</div>
+              </li>
+            </ol>
+          </div>
 
-        <section className="space-y-3">
-          <h2 className="text-xl font-semibold">Náhled souboru</h2>
-          <p className="text-sm text-muted-foreground">
-            Níže je náhled uloženého XLS souboru. Pokud zatím nemáš URL, ponecháme zástupný
-            přehled; skutečný náhled doplníme později.
-          </p>
-          <XlsPreview />
-        </section>
-      </main>
-
-      <footer className="border-t">
-        <div className="max-w-5xl mx-auto px-4 py-6 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} – Projektová stránka
+          <!-- Ukázková tabulka jako zástupný náhled -->
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hotel</th>
+                  <th>Datum</th>
+                  <th>Hodnocení</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Hotel A</td>
+                  <td>2021-02-15</td>
+                  <td>8/10</td>
+                </tr>
+                <tr>
+                  <td>Hotel B</td>
+                  <td>2021-03-01</td>
+                  <td>9/10</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </footer>
-    </div>
-  );
-}
+      </section>
+    </main>
 
+    <footer>
+      <div class="container small">© <span id="y"></span> – Projektová stránka</div>
+    </footer>
+    <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  </body>
+</html>
