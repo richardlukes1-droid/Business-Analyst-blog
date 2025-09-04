@@ -1,1 +1,134 @@
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { FileSpreadsheet } from "lucide-react";
+
+/**
+ * Jednoduchá projektová stránka dle zadání.
+ * - Nadpis: "První projekt"
+ * - Popis projektu (česky)
+ * - Sekce "Metadata" s odrážkami ve dvou sloupcích: "popisek dat + data"
+ * - Náhled uloženého XLS souboru (zástupný box, lze později napojit na skutečný soubor)
+ */
+
+function MetadataList() {
+  const items: { label: string; value: string }[] = [
+    { label: "Typ dat", value: "neveřejná" },
+    { label: "období", value: "01.01.20210 až 01.06.20210" },
+    { label: "počet záznamů", value: "15 000" },
+  ];
+
+  return (
+    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 list-disc pl-5">
+      {items.map((it) => (
+        <li key={it.label} className="marker:text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
+            <span className="font-medium capitalize text-foreground">{it.label}</span>
+            <span className="text-muted-foreground">— {it.value}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function XlsPreview({ url }: { url?: string }) {
+  // Pokud později dodáš URL/Blob XLS, vlož ji do prop "url" a iframe se zobrazí.
+  const hasUrl = Boolean(url);
+  return (
+    <Card className="rounded-2xl overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-lg flex items-center gap-2">
+          <FileSpreadsheet className="h-5 w-5" /> Náhled XLS souboru
+        </CardTitle>
+      </CardHeader>
+      <Separator />
+      <CardContent className="p-0">
+        {hasUrl ? (
+          <iframe
+            src={url}
+            title="XLS Preview"
+            className="w-full h-[60vh]"
+          />
+        ) : (
+          <div className="p-6 text-sm text-muted-foreground">
+            Zatím není připojen konkrétní soubor. Můžeš ho nahrát a uvést jeho URL,
+            případně sem přidáme serverovou konverzi XLS → HTML náhled.
+            <div className="mt-4 flex items-center gap-2">
+              <Input placeholder="Vlož URL k XLS (volitelné)" />
+              <Button disabled>Načíst</Button>
+            </div>
+            <div className="mt-4 rounded-lg border bg-muted/30 p-4">
+              <p className="mb-2">Ukázkový layout náhledu (zástupný obsah):</p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="py-1 pr-4">Hotel</th>
+                      <th className="py-1 pr-4">Datum</th>
+                      <th className="py-1 pr-4">Hodnocení</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="py-1 pr-4">Hotel A</td>
+                      <td className="py-1 pr-4">20210-02-15</td>
+                      <td className="py-1 pr-4">8/10</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-1 pr-4">Hotel B</td>
+                      <td className="py-1 pr-4">20210-03-01</td>
+                      <td className="py-1 pr-4">9/10</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function ProjektPage() {
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b">
+        <div className="max-w-5xl mx-auto px-4 py-6">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">První projekt</h1>
+          <p className="mt-3 text-muted-foreground max-w-3xl leading-relaxed">
+            Jedná se o analýzu data pocházejících ze dvou hotelů. Data popisují zákazníky dvou
+            hotelů. Kdo jsou tito zákazníci, proč se ubytovávají v daných hotelech, jak hodnotí
+            svůj pobyt.
+          </p>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 py-8 space-y-10">
+        <section>
+          <h2 className="text-xl font-semibold mb-3">Metadata</h2>
+          <MetadataList />
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold">Náhled souboru</h2>
+          <p className="text-sm text-muted-foreground">
+            Níže je náhled uloženého XLS souboru. Pokud zatím nemáš URL, ponecháme zástupný
+            přehled; skutečný náhled doplníme později.
+          </p>
+          <XlsPreview />
+        </section>
+      </main>
+
+      <footer className="border-t">
+        <div className="max-w-5xl mx-auto px-4 py-6 text-sm text-muted-foreground">
+          © {new Date().getFullYear()} – Projektová stránka
+        </div>
+      </footer>
+    </div>
+  );
+}
 
